@@ -9,8 +9,6 @@ node_modules/
 # Build output
 dist/
 build/
-.next/
-out/
 
 # Logs
 logs/
@@ -30,8 +28,3 @@ Thumbs.db
 
 # Test / coverage
 coverage/
-
-# Misc caches
-.cache/
-.turbo/
-.vercel/
