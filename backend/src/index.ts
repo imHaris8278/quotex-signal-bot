@@ -12,7 +12,24 @@ const app = express();
 
 app.use(
   cors({
-    origin: [config.corsOrigin, "http://localhost:3000", "http://127.0.0.1:3000"],
+    origin(origin, callback) {
+      const allowed = [
+        config.corsOrigin,
+        "http://localhost:3000",
+        "http://localhost:3006",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:3006",
+      ];
+      if (
+        !origin ||
+        allowed.includes(origin) ||
+        /^https:\/\/[\w-]+\.herokuapp\.com$/.test(origin)
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS blocked: ${origin}`));
+      }
+    },
   })
 );
 app.use(express.json());
@@ -24,6 +41,6 @@ app.get("/health", (_req, res) => {
 app.use("/api/pairs", pairsRouter);
 app.use("/api/signal", signalRouter);
 
-app.listen(config.port, () => {
-  console.log(`Signal backend running on http://localhost:${config.port}`);
+app.listen(config.port, "0.0.0.0", () => {
+  console.log(`Signal backend running on port ${config.port}`);
 });
